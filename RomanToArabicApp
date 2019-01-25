@@ -64,7 +64,7 @@ object RomanRefactored extends App {
     } else if (numberVector.exists(char => !charValues.contains(char))) {
       println("Invalid number. All characters not recognized as Roman numerals.")
     } else if (!this.hasCorrectForm(numberVector)) {
-      println("Invalid number. 10^n numbers like I or X can exist maximum of three times and 5*10^n only once." +
+      println("Invalid number. 10^n numbers like I or X can exist maximum of four times and 5*10^n only once." +
               "Also a number cannot be preceded by two smaller numbers.")
     } else {
       for (char <- numberVector) {
