@@ -1,0 +1,84 @@
+
+
+object RomanRefactored extends App {
+  
+  var quitCommandGiven = false
+  val charValues = Map[Char,Int]('I' -> 1, 'V' -> 5, 'X' -> 10, 'L' -> 50, 'C' -> 100, 'D' -> 500, 'M' -> 1000)
+  
+  def hasCorrectForm(input: Vector[Char]): Boolean = {
+  
+    val canExistFourTimes = Vector[Char]('I','X','C','M')
+    val canExistOnce = Vector[Char]('V','L','D')
+    
+    val filterOne = canExistOnce.forall(char => input.filter(_.==(char)).size <= 1)
+      
+    var hasTwoSmallerInFront = false
+    
+    if (input.length >= 3) {
+      val threeInRow = input.sliding(3)
+      for (three <- threeInRow) {
+        if (charValues(three(0)) > charValues(three(2)) && charValues(three(1)) > charValues(three(2))) {
+          hasTwoSmallerInFront = true
+        }
+      }
+    } 
+    
+    var hasFourSameInRow = false
+    
+    if (input.length >= 4) {
+      val fourInRow = input.sliding(4)
+      for (fourChar <- fourInRow) {
+        val row = fourChar.toVector
+        if ( row.length == 4 && row.forall(char => char.==(row(0))) ) hasFourSameInRow = true
+      }
+    }
+    
+    filterOne && !hasFourSameInRow && !hasTwoSmallerInFront
+  }
+  
+  
+  def hasTwoSmallerInFront(input: Vector[Char]): Boolean = {
+    
+    ???
+    
+  }
+  
+  
+  
+  
+  
+  
+  println("Please enter a Roman numeral or type 'quit' to quit")
+  
+  
+  while (!quitCommandGiven) {
+    
+    val input = readLine("Enter a Roman number: ")
+    var numberVector = input.trim.toUpperCase.toVector.reverse
+    var biggest = 0 
+    var sum = 0  
+    
+    if (input == "quit") {
+      this.quitCommandGiven = true
+      println("Shutting down")
+    } else if (numberVector.exists(char => !charValues.contains(char))) {
+      println("Invalid number. All characters not recognized as Roman numerals.")
+    } else if (!this.hasCorrectForm(numberVector)) {
+      println("Invalid number. 10^n numbers like I or X can exist maximum of three times and 5*10^n only once." +
+              "Also a number cannot be preceded by two smaller numbers.")
+    } else {
+      for (char <- numberVector) {
+        val charValue = charValues(char)
+        
+        if (charValue < biggest) {
+          sum -= charValue
+        } else {
+          sum += charValue
+          biggest = charValue
+        }
+      }
+      println(sum)
+    }
+  }
+  
+}
